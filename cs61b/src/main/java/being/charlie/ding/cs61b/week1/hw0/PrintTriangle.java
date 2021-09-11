@@ -1,4 +1,4 @@
-package being.charlie.ding.cs61b.hw0;
+package being.charlie.ding.cs61b.week1.hw0;
 
 public class PrintTriangle {
 

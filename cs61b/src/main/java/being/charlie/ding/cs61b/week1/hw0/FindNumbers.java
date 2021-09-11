@@ -1,7 +1,6 @@
-package being.charlie.ding.cs61b;
+package being.charlie.ding.cs61b.week1.hw0;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class FindNumbers {
 
