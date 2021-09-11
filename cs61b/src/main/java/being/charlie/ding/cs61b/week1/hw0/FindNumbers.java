@@ -130,6 +130,8 @@ public class FindNumbers {
         FindNumbers findNumbers = new FindNumbers(dogsize);
 
         System.out.println(findNumbers.find_number_helper());
+        FindNumbersTools.setNumbers(dogsize);
+        System.out.println(FindNumbersTools.find_number_helper());
 
 //        int[] a =new int[2];
 //        System.out.println(a.length);
