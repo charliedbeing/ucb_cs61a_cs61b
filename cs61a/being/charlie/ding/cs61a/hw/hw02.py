@@ -172,9 +172,5 @@ def count_coins(total):
     9
     >>> count_coins(100) # How many ways to make change for a dollar?
     242
-    >>> from construct_check import check
-    >>> # ban iteration
-    >>> check(HW_SOURCE_FILE, 'count_coins', ['While', 'For'])
-    True
     """
     "*** YOUR CODE HERE ***"
