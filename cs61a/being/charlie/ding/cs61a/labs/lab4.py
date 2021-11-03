@@ -103,3 +103,89 @@ def max_subseq(n, t):
     5
     """
     "*** YOUR CODE HERE ***"
+
+
+def help_word_acc_state(w):
+    """
+    word to [(False,'w'),(False,'o'),(),()]
+    """
+    count, i, rec = len(w), 0, []
+    while i <= count - 1:
+        rec.append((True,w.__getitem__(i)))
+        i = i + 1
+    return rec
+
+
+def help_word_acc(w):
+    """
+    word to ['w','o','r','d']
+    """
+    count,i,rec =len(w),0,[]
+    while i<= count-1:
+        rec.append(w.__getitem__(i))
+        i=i+1
+    return rec
+
+# test = help_word_acc("hello")
+# print(test)
+#
+# test = help_word_acc_state("hello")
+# print(test)
+
+def help_compare(c,arr):
+    count,i = len(arr),0
+    while i<= count-1:
+        flag,letter = arr[i]
+        if flag:
+            if letter == c:
+                arr[i]=(False,c)
+                break
+            else:
+                i=i+1
+        else:
+            i =i+1
+
+def help_arr_str(arr):
+    count,i,res= len(arr),0,''
+
+    while i<= count-1:
+        flag,c = arr[i]
+        if flag:
+            res= res +c
+            i=i+1
+        else:
+            i = i + 1
+    return res
+
+
+def add_chars(w1, w2):
+    """
+    Return a string containing the characters you need to add to w1 to get w2.
+
+    You may assume that w1 is a subsequence of w2.
+
+    >>> add_chars("owl", "howl")
+    'h'
+    >>> add_chars("want", "wanton")
+    'on'
+    >>> add_chars("rat", "radiate")
+    'diae'
+    >>> add_chars("a", "prepare")
+    'prepre'
+    >>> add_chars("resin", "recursion")
+    'curo'
+    >>> add_chars("fin", "effusion")
+    'efuso'
+    >>> add_chars("coy", "cacophony")
+    'acphon'
+    """
+    arr1, arr2 = help_word_acc(w1), help_word_acc_state(w2)
+
+    def help(arr1):
+        if len(arr1) > 0:
+            c, left = arr1[0], arr1[1:]
+            help_compare(c, arr2)
+            return help(left)
+
+    help(arr1)
+    return help_arr_str(arr2)

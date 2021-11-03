@@ -193,3 +193,30 @@ def all_non_consecutives(arr):
 #         else:
 #             return currArr
 #     return help([arr[0]],0)
+
+
+# List Comprehensions
+
+def list_genergate():
+    s=[x*x-3 for x in range(0,9) if x%2==1]
+    s2=[(lambda x: 2+x)(x) for x in range(0,9) if x%2 ==0]
+    print(s)
+    print(s2)
+
+list_genergate()
+
+
+# nest and recursive is the basic tool for the structure, and the structure is the fundamental block or framework.
+def even_weighted(s):
+    """
+    >>> x = [1, 2, 3, 4, 5, 6]
+    >>> even_weighted(x)
+    [0, 6, 20]
+    """
+    return [x*s[x] for x in [x for x in [s.index(x) for x in s] if x%2==0]]
+
+
+
+
+
+
