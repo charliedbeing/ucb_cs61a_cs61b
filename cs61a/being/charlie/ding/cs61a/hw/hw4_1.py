@@ -39,64 +39,104 @@ it = trans(s)
 # for _ in range(1,12):
 #     print(next(it))
 
+def help_test(it):
+    for i in range(1,13):
+        print(next(it))
+        print("---------")
 
+# help_test()
 
-def repeated(t, k):
-    assert k > 1
-    timers = 1
+def outer(timers):
 
-    def help(t,k):
-        nonlocal timers
-        def trans(t):
-            pre = -1
-            curr_single, curr = next(t), (0, 0)
-            while True:
-                if pre < 0:
+    def trans(t):
+        pre = -1
+        curr = (0, 0)
+        while True:
+            curr_single = next(t)
+            if pre < 0:
+                curr = (curr_single, 1)
+                pre = curr_single
+            else:
+                if pre == curr_single:
+                    curr = (curr[0], curr[1] + 1)
+                    pre = curr[0]
+                else:
                     curr = (curr_single, 1)
                     pre = curr_single
-                else:
-                    if pre == curr_single:
-                        curr = (curr[0], curr[1] + 1)
-                        pre = curr[0]
-                    else:
-                        curr = (curr_single, 1)
-                        pre = curr_single
-                curr_single = next(t)
-                yield curr
 
-        new_t = trans(t)
+            yield curr
 
+
+
+    def repeated(t,k):
+        assert k > 1
+        nonlocal timers
         value, timers_new = 0, 0
-
+        new_t = trans(t)
+        # help_test(new_t)
         while True:
             temp = next(new_t)
+
             if temp[1] == k:
+                timers_new = timers_new + 1
                 if timers == 1:
                     value = temp[0]
                     timers = timers + 1
                     break
                 elif timers == 2:
-                    timers_new = timers_new + 1
+
                     if timers_new == timers:
                         value = temp[0]
                         break
-
         return value
 
+    return repeated
 
-    return help
 
 
 s = iter([3, 2, 2, 2, 1, 2, 1, 4, 4, 5, 5, 5])
 
+def trans(t):
+    pre = -1
+    curr = (0, 0)
+    while True:
+        curr_single = next(t)
+        if pre < 0:
+            curr = (curr_single, 1)
+            pre = curr_single
+        else:
+            if pre == curr_single:
+                curr = (curr[0], curr[1] + 1)
+                pre = curr[0]
+            else:
+                curr = (curr_single, 1)
+                pre = curr_single
+
+        yield curr
+
+# for _ in range(1,13):
+#     print(next(s))
+#
+# s= iter([3, 2, 2, 2, 1, 2, 1, 4, 4, 5, 5, 5])
+# ss = trans(s)
+#
+# # print("------")
+#
+# for _ in range(1,13):
+#     print(next(ss))
+
+# print(next(ss))
+
+repeated = outer(1)
+#
 test1 = repeated(s,3)
 
-print(test1)
-
+s= iter([3, 2, 2, 2, 1, 2, 1, 4, 4, 5, 5, 5])
 test2 = repeated(s,3)
 
-
 print(test2)
+print(test1)
+
 
 
 
