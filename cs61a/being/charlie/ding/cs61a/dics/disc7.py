@@ -7,6 +7,7 @@ class Student(object):
         Student.students +=1
         print("There are now ", Student.students, "students")
         staff.add_student(self)
+
     def visit_office_hours(self,staff):
         staff.assist(self)
         print("Thanks," + staff.name)
