@@ -1,5 +1,7 @@
 from lab07 import *
 
+
+
 def sequences_list():
     lst =[1,2,3,4,5]
     print(lst[1:3])
@@ -491,11 +493,12 @@ x = 5
 #     return g
 
 def test_f_g_h():
+    t =f(8)
     # t = f(7)(8)(9)
     # print(t == 19)
     # print(t)
-    t = f_(7)
-    print(t)
+    # t = f_(7)
+    # print(t)
 
 # test_f_g_h()
 
@@ -573,4 +576,434 @@ def test_Student():
 
 
 
-test_Student()
+# test_Student()
+
+class Cat():
+    noise = 'meow'
+    def __init__(self,name):
+        self.name = name
+        self.hungry = True
+
+    def meow(self,message=''):
+        if self.hungry:
+            print(self.noise+', '+self.name +' is hungry'+'\r\n'+message)
+        else:
+            print(Cat.noise+', '+'my name is '+ self.name+'\r\n'+message)
+
+    def eat(self):
+        print(self.noise)
+        self.hungry= False
+
+class Kitten(Cat):
+    noise ="i'm baby"
+    def __init__(self,name,mama):
+        Cat.__init__(self,name)
+        self.mama = mama
+
+    def meow(self):
+        Cat.meow(self,'I want mama '+ self.mama.name)
+
+    def eat(self):
+        Cat.eat(self)
+
+def test_Cat_Kitten():
+    cat = Cat('Tuna')
+    kitten = Kitten('Fish',cat)
+    cat.meow()
+    kitten.meow()
+    cat.eat()
+    cat.meow()
+    kitten.eat()
+    kitten.meow()
+
+# test_Cat_Kitten()
+
+# 7 Object Oriented Trees
+
+def filter_tree(t,fn):
+    bs = t.branches
+
+    def help(t,fn):
+        if Tree.is_leaf(t):
+            if not fn(t.label):
+                t.remove=True
+        else:
+            curr,bs = t.label,t.branches
+            if not fn(curr):
+                t.remove = True
+            else:
+                for branch in bs:
+                    help(branch,fn)
+
+    for branch in bs:
+        help(branch,fn)
+
+    Tree.update_remove(t)
+
+
+
+
+
+
+def test_7_filter_tree():
+    t = Tree(1,[Tree(2),Tree(3,[Tree(4)]),Tree(6,[Tree(7)])])
+    filter_tree(t,lambda x: x%2 !=0)
+
+    print(t)
+
+
+# test_7_filter_tree()
+
+
+def nth_level_tree_map(fn,tree,n):
+    tree.update_level()
+
+    def help(t,fn,n):
+        if Tree.is_leaf(t):
+            if t.level == n:
+                t.update(fn(t.label))
+        else:
+            curr,bs = t.label, t.branches
+            if t.level == n:
+                t.update(fn(t.label))
+                for branch in bs:
+                    help(branch,fn,n)
+            else:
+                for branch in bs:
+                    help(branch,fn,n)
+    help(tree,fn,n)
+    print(tree)
+
+
+
+
+
+def test_nth_level_tree_map():
+    t = Tree(1, [Tree(2), Tree(3, [Tree(4)]), Tree(6, [Tree(7)])])
+    nth_level_tree_map(lambda x: x*2, t,2)
+
+
+# test_nth_level_tree_map()
+
+# 8 Linked List
+
+def has_cycle(link):
+    count,select_one = False,link
+    def help(link):
+        nonlocal count,select_one
+        if not link == Link.empty:
+            if select_one == link:
+                count = True
+                return
+            else:
+                help(link.rest)
+    help(link.rest)
+    return count
+
+def has_cycle_2(link):
+    flag,is_cycle = link,False
+    def help(link):
+        nonlocal flag,is_cycle
+        if not link == Link.empty:
+            if link == flag:
+                is_cycle = True
+                return
+            else:
+                help(link.rest)
+    help(link.rest)
+
+
+
+def test_8_has_cycle():
+    s = Link(1,Link(2,Link(3)))
+    s.rest.rest.rest =s
+    print(has_cycle(s))
+
+
+# test_8_has_cycle()
+
+    # def help_size(link,acc=0):
+    #     if link == Link.empty:
+    #         return acc
+    #     else:
+    #         return help_size(link.rest,acc+1)
+
+def seq_in_link(link,sub_link):
+    def help_find_first(link,value):
+        new_link,is_find = None,False
+        while not link == Link.empty:
+            curr,rest = link.first,link.rest
+            if curr == value:
+                new_link = rest
+                is_find = True
+                break
+            else:
+                link = rest
+        return (is_find,new_link)
+
+    rs = True
+    while not sub_link == Link.empty:
+        is_find,new_link = help_find_first(link,sub_link.first)
+        if is_find:
+            link,sub_link = new_link, sub_link.rest
+        else:
+            rs = False
+            break
+    return rs
+
+
+
+
+
+
+
+
+
+
+def test_seq_in_link():
+
+    lnk1 = Link(53, Link(2, Link(3, Link(34))))
+    lnk2 = Link(53, Link(3))
+
+    print(seq_in_link(lnk1,lnk2))
+
+# test_seq_in_link()
+
+
+# 9 Iterators and Generators
+
+def interator_demo():
+    new_list =[2,3,6,8,8,3]
+    # next(new_list)
+    next(iter(new_list))
+    g = iter(new_list)
+    print(type(g))
+    # g[1]
+    a = [x for x in iter(new_list)]
+    print(a)
+    # b = len(g)
+    # print(b)
+# interator_demo()
+
+def generate_constant(x):
+    # """A generator function that repeats the same value x forever.
+    # >>> area = generate_constant(51)
+    # >>> next(area)
+    # 51
+    # >>> next(area)
+    # 51
+    # >>> sum([next(area) for _ in range(100)])
+    # 5100
+    # """
+    while True:
+        yield x
+
+ # """A generator that yields items in SEQ until one of them matches TRAP, in which case that
+ #    value should be repeatedly yielded forever.
+ #    >>> trapped = black_hole([1, 2, 3], 2)
+ #    >>> [next(trapped) for _ in range(6)]
+ #    [1, 2, 2, 2, 2, 2]
+ #    >>> list(black_hole(range(5), 7))
+ #    [0, 1, 2, 3, 4]
+ #    """
+
+def black_hole(seq,trap):
+    i,count =0,len(seq)
+    while i<= count -1:
+        temp = seq[i]
+        if temp != trap:
+            i = i+1
+            yield temp
+        else:
+           yield from generate_constant(trap)
+
+def test_black_hole():
+    traped = black_hole([1,2,3],2)
+    a =[next(traped) for _ in range(6)]
+    print(a)
+
+    b= list(black_hole(range(5), 7))
+    print(b)
+
+# test_black_hole()
+
+def weird_gen(x):
+    if x % 2 == 0:
+        yield x*2
+
+def test_weird_gen():
+    wg = weird_gen(2)
+    print(next(wg))
+    print(next(weird_gen(2)))
+    print(next(wg))
+
+# test_weird_gen()
+
+def greeter(x):
+    while x % 2 !=0:
+        print('hi')
+        yield x
+        print('bye')
+
+def test_greeter():
+    gen = greeter(5)
+    print(type(gen))
+    # print(next(gen))
+    g = next(gen)
+    g = (g,next(gen))
+    print(g)
+    print(next(gen))
+
+# test_greeter()
+
+def gen_inf(list):
+    i,count = 0,len(list)
+    while True:
+        while i<= count-1:
+            if i< count-1:
+                yield list[i]
+                i = i+1
+            else:
+                yield list [i]
+                i =0
+
+def test_gen_inf():
+    t = gen_inf([3,4,5])
+    a = [ next(t) for _ in range(9) ]
+    print(a)
+
+# test_gen_inf()
+
+
+def naturals():
+    i=1
+    while True:
+        yield i
+        i =i+1
+
+ # """
+ #    >>> is_even = lambda x: x % 2 == 0
+ #    >>> list(filter(range(5), is_even))
+ #    [0, 2, 4]
+ #    >>> all_odd = (2*y-1 for y in range (5))
+ #    >>> list(filter(all_odd, is_even))
+ #    []
+ #    >>> s = filter(naturals(), is_even)
+ #    >>> next(s)
+ #    2
+ #    >>> next(s)
+ #    4
+ #    """
+
+def filter(iterable,fn):
+
+    for i in iterable:
+        if fn(i):
+            yield i
+
+
+def test_filter():
+   for i in naturals():
+       print(i)
+
+# test_filter()
+# """
+#     >>> t = Tree(1, [Tree(2, [Tree(5)]), Tree(3, [Tree(4)])])
+#     >>> print(list(tree_sequence(t)))
+#     [1, 2, 5, 3, 4]
+#     """
+
+def tree_sequence(t):
+
+    value = []
+    def help(t):
+        nonlocal value
+        if Tree.is_leaf(t):
+            value.append(t.label)
+        else:
+            curr,bs = t.label, t.branches
+            value.append(curr)
+            for branch in bs:
+                help(branch)
+
+    help(t)
+    yield from value
+
+def test_tree_sequence():
+    t = Tree(1, [Tree(2, [Tree(5)]), Tree(3, [Tree(4)])])
+    print(list(tree_sequence(t)))
+
+# test_tree_sequence()
+
+
+def make_digit_getter(n):
+    def inner():
+        rec = []
+        def help():
+            nonlocal n
+            while n > 10:
+                digit = n % 10
+                rec.append(digit)
+                n = n // 10
+            rec.append(n)
+            rec.append(sum(rec))
+        help()
+        yield from rec
+
+    g = inner()
+    def outer():
+        return next(g)
+    return outer
+
+
+def test_make_digit_getter():
+    year =8102
+    get_year = make_digit_getter(year)
+    for _ in range(4):
+        print(get_year())
+
+    print(get_year())
+
+# test_make_digit_getter()
+
+
+def iter(iterable):
+    def iterator(msg):
+        nonlocal iterable
+        if msg == 'next':
+            next = iterable[0]
+            iterable = iterable[1:]
+            return next
+        elif msg == 'stop':
+            raise StopIteration
+    return iterator
+
+def next(iterator):
+    return iterator('next')
+
+def stop(iterator):
+    iterator('stop')
+
+def test_last_one():
+    lst =[1,2,3]
+    iterator = iter(lst)
+    elem = next(iterator)
+
+    print(elem)
+    print(next(iterator))
+
+
+test_last_one()
+
+
+
+
+
+
+
+
+
+
+
+
+

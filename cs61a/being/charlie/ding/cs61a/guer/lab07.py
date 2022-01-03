@@ -142,6 +142,8 @@ class Tree:
         for b in branches:
             assert isinstance(b, Tree)
         self.label = label
+        self.remove = False
+        self.level = 1
         self.branches = list(branches)
 
     def is_leaf(self):
@@ -150,12 +152,46 @@ class Tree:
     def update(self,new_value):
         self.label = new_value
 
+    def update_remove(self):
+        if len(self.branches)>0:
+            i, count = 0, len(self.branches)
+            while i <= count - 1:
+                if self.branches[i].remove:
+                    self.branches.__delitem__(i)
+                    count = count-1
+                    i=0
+                else:
+                    i = i + 1
+            if len(self.branches)>0:
+                for branch in self.branches:
+                    branch.update_remove()
+
+    def update_level(self):
+        if len(self.branches)>0:
+            temp = self.level
+            for branch in self.branches:
+                branch.level = temp +1
+            for branch in self.branches:
+                branch.update_level()
+
+
+
+
+
+
+
+
+
+
+
+
     def __repr__(self):
         if self.branches:
             branch_str = ', ' + repr(self.branches)
         else:
             branch_str = ''
         return 'Tree({0}{1})'.format(self.label, branch_str)
+
     def __str__(self):
         def print_tree(t, indent=0):
             tree_str = '  ' * indent + str(t.label) + "\n"
