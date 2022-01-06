@@ -184,34 +184,61 @@ def subseqs(s):
     #             temp.append(v)
     #             to_last_step_2(pre,temp,arr[i+2:],target)
 
-    def to_last_step_3(pre,curr=[],arr=[],target =1):
+    def to_last_step_3_(pre,curr=[],arr=[],target =1):
         if len(curr) == target:
             rec.append(curr)
             return
         if len(curr)+1 == target:
             help(curr,curr,arr,target)
             return
-        elif len(curr) < target -1:
-            curr.append(arr[0])
-            rest = arr[1:]
-            if len(curr)<target -1:
-                for i, v in enumerate(rest):
-                    if len(curr) + len(arr) - 1 - i + 1 >= target:
-                        temp = curr[:]
-                        temp.append(v)
-                        to_last_step_3(pre, temp, rest[i + 1:], target)
-            else:
-                to_last_step_3(pre, curr, arr[1:], target)
-
         elif len(curr) + len(arr) == target:
             curr.extend(arr)
             rec.append(curr)
-        for i,v in enumerate(arr[1:]):
+        elif len(curr) < target -1:
+            curr.append(arr[0])
+            rest = arr[1:]
+            for i, v in enumerate(rest):
+                if len(curr) + len(arr) - 1 - i + 1 >= target:
+                    temp = curr[:]
+                    temp.append(v)
+                    if len(temp)+1 == target:
+                        help(temp,temp,rest[1:],target)
+                        rest =rest[1:]
+                    else:
+                        to_last_step_3(pre, temp, rest[i + 1:], target)
+
+        rest_arr = arr[1:]
+        for i,v in enumerate(rest_arr):
             curr=pre[:]
-            if len(curr)+len(arr)-1-i+1 >= target:
+            if len(curr)+len(rest_arr)-1-i+1 >= target:
                 temp =pre[:]
                 temp.append(v)
-                to_last_step_3(pre,temp,arr[i+2:],target)
+                to_last_step_3(pre,temp,rest_arr[i+1:],target)
+
+    def to_last_step_3(pre, curr=[], arr=[], target=1):
+        if len(curr) == target:
+            rec.append(curr)
+            return
+        if len(curr) + 1 == target:
+            help(curr, curr, arr, target)
+            return
+        elif len(curr) + len(arr) == target:
+            curr.extend(arr)
+            rec.append(curr)
+        elif len(curr) < target - 1:
+            for i, v in enumerate(arr):
+                if len(curr) + len(arr) - 1 - i + 1 >= target and target-len(curr)>=2:
+                    temp = curr[:]
+                    temp.append(v)
+                    to_last_step_3(pre, temp, arr[i + 1:], target)
+                else:
+                    rest =arr[:]
+                    for j,vv in enumerate(rest):
+                        if len(curr) + len(rest) - 1 - i + 1 >= target:
+                            tempp= curr[:]
+                            tempp.append(vv)
+                            to_last_step_3(pre,tempp,rest[j+1:],target)
+
 
 
     def out_help(s,i):
@@ -223,14 +250,14 @@ def subseqs(s):
 
     i,count = 1, len(s)
     while i <= count:
-        if i ==5:
+        if i ==4:
             out_help(s,i)
         i=i+1
 
     return rec
 
 def test_subseqs():
-    s =[1,2,3,4,5,6]
+    s =[1,2,3,4,5,6,7,8]
     t = subseqs(s)
     print(t)
 
